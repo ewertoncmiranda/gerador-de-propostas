@@ -1,0 +1,18 @@
+cloud:
+  aws:
+    region:
+      static: sa-east-1
+      auto: false
+    credentials:
+      access-key: AKIAWLEP3QBKPR466FYA
+      secret-key: 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
+    end-point-sqs:
+      uri:  https://sqs.sa-east-1.amazonaws.com/436240875604/sender-propostas #${SQS_QUEUE_ENDPOINT_001}
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2MB
+      max-file-size: 5MB
+      max-request-size: 10MB
