@@ -36,7 +36,7 @@ public class SenderToQueue {
 
             sqsClient().sendMessage(SendMessageRequest.builder()
                     .queueUrl(endpoint)
-                    .messageBody("Hello world!")
+                    .messageBody(GeradorDePropostas.gerarPropostaAprovada().toString())
                     .delaySeconds(0)
                     .build());
 
