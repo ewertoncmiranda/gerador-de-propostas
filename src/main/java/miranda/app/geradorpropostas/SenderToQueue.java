@@ -1,5 +1,8 @@
 package miranda.app.geradorpropostas;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,11 +20,10 @@ import software.amazon.awssdk.services.sqs.model.SqsException;
 @Component
 public class SenderToQueue {
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 10000)
     public void scheduleFixedDelayTask() {
-        String to = "Message";
-        System.out.println(to);
-        sendEndpoint (to);
+
+        sendEndpoint ();
     }
 
     @Value("${app.config.message.queue.topic}")
@@ -31,12 +33,16 @@ public class SenderToQueue {
     @Value("${aws.secretKeyId}")
     private String awsSecretKeyId;
 
-    public void sendEndpoint(String message){
+    public void sendEndpoint(){
         try {
 
+            ObjectMapper mapper = new ObjectMapper();
+            String s = mapper.writeValueAsString(GeradorDePropostas.gerarPropostaAprovada().toString());
+
+            System.out.println(s);
             sqsClient().sendMessage(SendMessageRequest.builder()
                     .queueUrl(endpoint)
-                    .messageBody(GeradorDePropostas.gerarPropostaAprovada().toString())
+                    .messageBody(s)
                     .delaySeconds(0)
                     .build());
 
@@ -44,6 +50,8 @@ public class SenderToQueue {
         } catch (SqsException e) {
             System.err.println(e.awsErrorDetails().errorMessage());
             System.exit(1);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
 
 

@@ -9,6 +9,16 @@ public class Proposta {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "Proposta{" +
+                "nome='" + nome + '\'' +
+                ", status='" + status + '\'' +
+                ", documento='" + documento + '\'' +
+                ", id='" + id + '\'' +
+                '}';
+    }
+
     public String getNome() {
         return nome;
     }
